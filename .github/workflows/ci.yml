@@ -1,0 +1,39 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  build-and-test:
+    name: build & test (${{ matrix.compiler }})
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        compiler: [g++, clang++]
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Build
+        run: make CXX=${{ matrix.compiler }}
+
+      - name: Unit tests
+        run: make CXX=${{ matrix.compiler }} unit-test
+
+      - name: Integration tests
+        run: make CXX=${{ matrix.compiler }} integration-test
+
+  sanitizers:
+    name: AddressSanitizer + UndefinedBehaviorSanitizer
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Build with sanitizers
+        run: make SANITIZE=1
+
+      - name: Run tests under sanitizers
+        run: make SANITIZE=1 test
