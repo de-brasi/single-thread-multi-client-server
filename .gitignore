@@ -1,0 +1,14 @@
+build/
+*.o
+*.out
+
+# Local run artifacts
+*.log
+received*.txt
+
+# Editors / IDEs
+.idea/
+.vscode/
+cmake-build-*/
+compile_commands.json
+.DS_Store
